@@ -37,10 +37,11 @@ object Engine {
             ClusterService.clusters[clusterId - 1].objects.add(line)
         }
         println(normalizedData[0])
-        ClusterService.clusters.forEach { it.centroid() }
-        ClusterService.clusters.forEach { it.objects.clear() }
+        ClusterService.clusters.forEach { it.updateCentroid() }
+
 
         while (progressSpeedInd == -1.0 || progressSpeedInd > threshold) {
+            ClusterService.clusters.forEach { it.objects.clear() }
             normalizedData.forEach { line ->
                 var closestId = -1
                 var minDist = -1.0
@@ -57,7 +58,7 @@ object Engine {
             var distMean = 0.0
             val centroids = mutableListOf<DataLine>()
             ClusterService.clusters.forEach { centroids.add(it.centroid) }
-            ClusterService.clusters.forEach { it.centroid() }
+            ClusterService.clusters.forEach { it.updateCentroid() }
             ClusterService.clusters.forEachIndexed { i, cluster ->
                 val dist = cluster.centroid.dist(centroids[i])
                 distMean += dist

@@ -31,10 +31,10 @@ object Engine {
             datum.normalize(normalizationVector)
         }
 
-        normalizedData.forEach { line ->
+        ClusterService.clusters.forEach { cluster ->
             val random = Random()
-            val clusterId = random.nextInt(nbOfclusters) + 1
-            ClusterService.clusters[clusterId - 1].objects.add(line)
+            val lineId = random.nextInt(normalizedData.size) + 1
+            cluster.objects.add(normalizedData[lineId])
         }
         println(normalizedData[0])
         ClusterService.clusters.forEach { it.updateCentroid() }
@@ -72,8 +72,11 @@ object Engine {
             }
             println("perf: $perf, progressSpeedInd: $progressSpeedInd")
         }
-        for(i in 0..100){
-            println(ClusterService.clusters[1].objects[i].unNormalize(normalizationVector))
+        for(j in 0..4) {
+            for (i in 0..10) {
+                println(ClusterService.clusters[j].objects[i].unNormalize(normalizationVector))
+            }
+            println("----------------------------------------------------------------------")
         }
     }
 }

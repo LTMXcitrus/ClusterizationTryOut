@@ -19,8 +19,6 @@ class Cluster(val id: Int, val objects: MutableList<DataLine> = mutableListOf(),
             hours_per_week += line.hours_per_week
         }
         centroid = DataLine(age/size, fnlwgt/size, education_num/size, capital_gain/size, capital_loss/size, hours_per_week/size)
-        //println("centroid: $centroid")
-        println("coucou")
     }
 
 }

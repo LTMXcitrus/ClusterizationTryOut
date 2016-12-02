@@ -1,10 +1,18 @@
-import model.DataLine
-import model.NormalizationService
+/*
+package ungeneric
+
+import ungeneric.model.DataLine
+import ungeneric.model.DataLineRaw
+import ungeneric.model.NormalizationService
+import ungeneric.model.StringToValuesService.findStringValues
+import ungeneric.model.StringToValuesService.numerize
 import java.util.Random
 
 object Engine {
 
-    fun loadData(): List<DataLine> {
+    var rawData: List<DataLineRaw> = listOf()
+
+    fun loadData(): List<DataLineRaw> {
         val stream = DataLine::class.java.getResourceAsStream("/data.csv")
         val reader = stream.bufferedReader()
         val linesAsStream = reader.lines()
@@ -12,12 +20,27 @@ object Engine {
         return lines.map { readDataLine(it) }
     }
 
-    fun readDataLine(line: Any): DataLine {
+    fun readDataLine(line: Any): DataLineRaw {
         val lineAsString = line as String
         val data = lineAsString.split(", ")
-        return DataLine(data[0].toDouble(), data[2].toDouble(), data[4].toDouble(), data[10].toDouble(),
-                data[11].toDouble(), data[12].toDouble())
+        return DataLineRaw(
+                data[0].toDouble(),
+                data[1],
+                data[2].toDouble(),
+                data[3],
+                data[4].toDouble(),
+                data[5],
+                data[6],
+                data[7],
+                data[8],
+                data[9],
+                data[10].toDouble(),
+                data[11].toDouble(),
+                data[12].toDouble(),
+                data[13],
+                data[14])
     }
+
 
     fun clusterize(nbOfclusters: Int, threshold: Double) {
 
@@ -25,7 +48,7 @@ object Engine {
         var progressSpeedInd = -1.0
 
         ClusterService.createClusters(nbOfclusters)
-        val data = loadData()
+        val data = numerize(loadData())
         val normalizationVector = NormalizationService.getNormalizationObject(data)
         val normalizedData = data.map { datum ->
             datum.normalize(normalizationVector)
@@ -80,3 +103,4 @@ object Engine {
         }
     }
 }
+*/

@@ -4,8 +4,6 @@ object ClusterService {
 
     fun createClusters(nbOfClusters: Int) {
         clusters.clear()
-        for (i in 1..nbOfClusters){
-            clusters.add(Cluster(i))
-        }
+        (1..nbOfClusters).mapTo(clusters) { Cluster(it) }
     }
 }

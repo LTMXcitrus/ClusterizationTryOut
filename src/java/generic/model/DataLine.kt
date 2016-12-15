@@ -7,6 +7,11 @@ import javax.xml.crypto.Data
 data class DataLine(
         val fields: MutableList<Field>
 ) {
+
+    constructor(dataline: DataLine): this(dataline.fields){
+
+    }
+
     override fun toString(): String {
         return fields.joinToString(", ")
     }
@@ -23,7 +28,7 @@ data class DataLine(
     }
 
     fun normalize(normalizationVector: DataLine): DataLine {
-        val newFields: MutableList<Field> = DataModel.getVirginFields()
+        val newFields: MutableList<Field> = StringToValuesService.getEmptyObject().fields
         fields.forEachIndexed { i, field ->
             newFields[i].value = field.value / normalizationVector.fields[i].value
         }
@@ -36,5 +41,13 @@ data class DataLine(
             sum += Math.pow(field.value - dataLine.fields[i].value, 2.0)
         }
         return Math.sqrt(sum)
+    }
+
+    fun removeField(field: Field){
+        fields.remove(field)
+    }
+
+    fun addField(field: Field){
+        fields.add(field)
     }
 }

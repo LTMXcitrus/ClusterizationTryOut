@@ -78,8 +78,8 @@ object Engine {
             }
             println("perf: $perf, progressSpeedInd: $progressSpeedInd")
         }
-        for (j in 0..4) {
-            for (i in 0..10) {
+        for (j in 0..nbOfclusters-1) {
+            for (i in 0..(Math.min(10, ClusterService.clusters[j].objects.size) - 1)) {
                 println(ClusterService.clusters[j].objects[i].unNormalize(normalizationVector))
             }
             println("----------------------------------------------------------------------")

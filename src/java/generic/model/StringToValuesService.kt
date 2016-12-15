@@ -18,11 +18,28 @@ object StringToValuesService {
     }
 
     fun unraw(line: DataLine): DataLine {
-        val fields: MutableList<Field> = DataModel.getVirginFields()
-        line.fields.forEachIndexed { i, field ->
-            fields[i].value = getValue(field)
+        val newFields = mutableListOf<Field>()
+        line.fields.forEach { newFields.add(it) }
+        newFields.forEach { field ->
+            if (stringValues.containsKey(field.name)) {
+                line.removeField(field)
+                stringValues[field.name]!!.forEach { value ->
+                    line.addField(Field("${field.name}_$value",
+                            field.type,
+                            if (field.rawValue == value) 1.0 else 0.0, field.rawValue))
+                }
+            }
         }
-        return DataLine(fields)
+        line.fields.forEach { field ->
+            if(field.isNumber() && field.rawValue != ""){
+                field.value = field.rawValue.toDouble()
+            }
+        }
+        return line
+    }
+
+    fun getEmptyObject(): DataLine {
+        return unraw(DataLine(DataModel.getVirginFields()))
     }
 
     fun getValue(field: Field): Double {

@@ -8,7 +8,7 @@ object StringToValuesService {
     val stringValues: HashMap<String, HashSet<String>> = hashMapOf()
     fun findStringValues(objects: List<DataLine>) {
         objects.forEach { line ->
-            line.fields.forEach { field ->
+            line.fields.forEachIndexed { i, field ->
                 if (field.type == "String") {
                     val hashSet = stringValues.getOrPut(field.name) { hashSetOf() }
                     hashSet.add(field.rawValue)

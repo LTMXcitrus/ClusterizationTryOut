@@ -1,8 +1,5 @@
 package generic.model
 
-import generic.model.Field
-import javax.xml.crypto.Data
-
 
 data class DataLine(
         val fields: MutableList<Field>
@@ -16,21 +13,25 @@ data class DataLine(
         return fields.joinToString(", ")
     }
 
-    fun unNormalize(normalizationVector: DataLine): DataLine {
+    fun unNormalize(objects: List<DataLine>): DataLine {
+        val meanVector = NormalizationService.getMeanObject(objects)
+        val stanDevVector = NormalizationService.getStanDevObject(objects, meanVector)
         val newFields: MutableList<Field> = mutableListOf()
         fields.forEachIndexed { i, field ->
             newFields.add(
                     Field(field.name,
                             field.type,
-                            field.value * normalizationVector.fields[i].value))
+                            (field.value * stanDevVector.fields[i].value) + meanVector.fields[i].value))
         }
         return DataLine(newFields)
     }
 
-    fun normalize(normalizationVector: DataLine): DataLine {
+    fun normalize(objects: List<DataLine>): DataLine {
+        val meanVector = NormalizationService.getMeanObject(objects)
+        val stanDevVector = NormalizationService.getStanDevObject(objects, meanVector)
         val newFields: MutableList<Field> = StringToValuesService.getEmptyObject().fields
         fields.forEachIndexed { i, field ->
-            newFields[i].value = field.value / normalizationVector.fields[i].value
+            newFields[i].value = (field.value - meanVector.fields[i].value) / stanDevVector.fields[i].value
         }
         return DataLine(newFields)
     }

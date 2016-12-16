@@ -4,7 +4,7 @@ object DataModel{
 
     val fields: MutableList<Field> = getVirginFields()
 
-    fun getVirginFields(): MutableList<Field>{
+    /*fun getVirginFields(): MutableList<Field>{
         return mutableListOf(
                 Field("age", "Double", 0.0, ""),
                 Field("workclass", "String", 0.0, ""),
@@ -21,6 +21,16 @@ object DataModel{
                 Field("hours_per_week", "Double", 0.0, ""),
                 Field("native_country", "String", 0.0, ""),
                 Field("income_bracket", "String", 0.0, "")
+        )
+    }*/
+
+    fun getVirginFields(): MutableList<Field>{
+        return mutableListOf(
+                Field("dim1", "Double", 0.0, ""),
+                Field("dim2", "Double", 0.0, ""),
+                Field("dim3", "Double", 0.0, ""),
+                Field("dim4", "Double", 0.0, ""),
+                Field("dim5", "Double", 0.0, "")
         )
     }
 }

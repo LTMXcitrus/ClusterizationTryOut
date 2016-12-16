@@ -8,8 +8,8 @@ import java.util.Random
 object Engine {
 
 
-    fun loadData(): List<DataLine> {
-        val stream = DataLine::class.java.getResourceAsStream("/data.csv")
+    fun loadData(resourceFile: String): List<DataLine> {
+        val stream = DataLine::class.java.getResourceAsStream("/$resourceFile")
         val reader = stream.bufferedReader()
         val linesAsStream = reader.lines()
         val lines = linesAsStream.toArray()
@@ -26,16 +26,16 @@ object Engine {
         return DataLine(fields)
     }
 
-    fun clusterize(nbOfclusters: Int, threshold: Double) {
+    fun clusterize(nbOfclusters: Int, threshold: Double, resourceFile: String) {
 
         var perf = -1.0
         var progressSpeedInd = -1.0
 
         ClusterService.createClusters(nbOfclusters)
-        val data = StringToValuesService.numerize(loadData())
-        val normalizationVector = NormalizationService.getNormalizationObject(data)
+        val data = StringToValuesService.numerize(loadData(resourceFile))
+        val normalizationVector = NormalizationService.getMeanObject(data)
         val normalizedData = data.map { datum ->
-            datum.normalize(normalizationVector)
+            datum.normalize(data)
         }
 
         ClusterService.clusters.forEach { cluster ->
@@ -43,7 +43,8 @@ object Engine {
             val lineId = random.nextInt(normalizedData.size) + 1
             cluster.objects.add(normalizedData[lineId])
         }
-        ClusterService.clusters.forEach { it.updateCentroid() }
+        println("Premiers clusters:")
+        ClusterService.clusters.forEach { it.updateCentroid(normalizationVector) }
 
 
         while (progressSpeedInd == -1.0 || progressSpeedInd > threshold) {
@@ -64,7 +65,7 @@ object Engine {
             var distMean = 0.0
             val centroids = mutableListOf<DataLine>()
             ClusterService.clusters.forEach { centroids.add(it.centroid) }
-            ClusterService.clusters.forEach { it.updateCentroid() }
+            ClusterService.clusters.forEach { it.updateCentroid(normalizationVector) }
             ClusterService.clusters.forEachIndexed { i, cluster ->
                 val dist = cluster.centroid.dist(centroids[i])
                 distMean += dist
@@ -80,10 +81,10 @@ object Engine {
         }
         for (j in 0..nbOfclusters-1) {
             for (i in 0..(Math.min(10, ClusterService.clusters[j].objects.size) - 1)) {
-                println(ClusterService.clusters[j].objects[i].unNormalize(normalizationVector))
+                println(ClusterService.clusters[j].objects[i].unNormalize(data))
             }
             println("----------------------------------------------------------------------")
         }
-        recap(normalizationVector)
+        recap(normalizationVector, data)
     }
 }
